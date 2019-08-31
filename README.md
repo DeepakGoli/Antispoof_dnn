@@ -1,3 +1,3 @@
 # Antispoof_dnn
 DNN 
-agos used in the spoof detection
+algos used in the spoof detection
