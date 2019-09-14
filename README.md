@@ -1,3 +1,3 @@
 # Antispoof_dnn
 DNN 
-algos used in the spoof detection
+Neural Network algorithms and research papers used in the spoofing detection
