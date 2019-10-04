@@ -15,17 +15,18 @@ from scipy import signal
 class DataGenerator(keras.utils.Sequence):
     'Generates batches of data for a system'
     
-    def __init__(self,list_IDs,labels,path_to_dir,batch_size=32,in_dim=(256,400),
+    def __init__(self,list_IDs,labels,path_to_dir,batch_size=32,dim=(257,400),
                  n_channels=1,n_classes=2,shuffle=True):
         self.list_IDs  = list_IDs
         self.labels    = labels
         self.batch_size= batch_size
-        self.in_dim    = in_dim
+        self.dim       = dim
         self.n_channels= n_channels
         self.n_classes = n_classes
         self.shuffle   = shuffle
-        self.on_epoch_end()
         self.path_to_dir = path_to_dir
+        self.on_epoch_end()
+        
         
     def on_epoch_end(self):
         'updates indexes after each epoch. Shuffling of our dataset happens here'
@@ -40,6 +41,7 @@ class DataGenerator(keras.utils.Sequence):
     def __data_generation(self,list_IDs_temp):
         'Generates data containing batch_size samples'
         #initialization
+        #X=np.empty((self.batch_size,*self.dim,self.n_channels))
         X=np.empty((self.batch_size,*self.dim,self.n_channels))
         y=np.empty((self.batch_size),dtype=int)
         
@@ -78,7 +80,9 @@ class DataGenerator(keras.utils.Sequence):
         nfft = 512
         window = signal.get_window('blackman',nperseg)
         f,t,Sxx = signal.stft(x,fs,window,noverlap=noverlap,nfft=nfft)
-        return Sxx
+        log_power = np.empty((*self.dim,self.n_channels))
+        log_power[:,:,0] = 20*np.log10(np.power(abs(Sxx),2))
+        return log_power
     
         
         
